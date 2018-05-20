@@ -1,0 +1,26 @@
+<?php require_once $_SERVER['DOCUMENT_ROOT'].'/profile/function/dbconnect.php' ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT'].'/profile/function/checklogin.php' ?>
+<?php
+	$ids = $_POST['ids'];
+	foreach($ids as $id){
+		$sql = "delete from skills where id = {$id}";
+		$rs = mysqli_query($conn, $sql);
+	}
+	$query = "select * from skills where user_id = {$_SESSION['userLogin']['id']}";
+	$result = mysqli_query($conn, $query);
+	$data = "";
+	while($row = mysqli_fetch_assoc($result)) {
+		$data .= "<tr>
+					<td><input class='checkbox' name='ids' id='{$row['id']}' type='checkbox' /></td>
+                    <td>{$row['name']}</td>
+                    <td>{$row['percent']} %</td>
+                    <td>
+                      <a title='edit' href='update.php?id={$row['id']}'><i class='fa fa-fw fa-edit'></i></a> 
+                      <a title='delete' href='delete.php?id={$row['id']}' onclick=\"return confirm('Are you sure?')\">
+                        <i class='fa fa-fw fa-trash'></i>
+                      </a>
+                    </td>
+                  </tr>";
+	}
+	echo $data;
+?>
